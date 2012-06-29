@@ -2,11 +2,15 @@
 
 /**
  * @property string $cookieFile path to file that stores cookies 
+ * 
+ * @property-read string $lastError last request error
  */
 class HttpClient extends CApplicationComponent
 {
-    
-    private $error;
+    /**
+     * @var string last request error
+     */
+    private $_lastError;
 
     protected $use_proxy = false;
     protected $proxies;
@@ -87,21 +91,34 @@ class HttpClient extends CApplicationComponent
             '<b>' . $params['url'] . '</b>' .
             '<pre>' . var_export($params['post'], true) . '</pre>';*/
 
+        Yii::trace('Calling ' . $params['url'], __CLASS__);
+        
         do {
+            // Do http request
             $res = curl_exec($ch);
+            
         } while (
-            $res === FALSE && 
+            $res === FALSE && // 
             --$params['attempts_max'] != 0 &&
             sleep($params['attempts_delay']) !== FALSE
         );
         
-        if(isset($params['tofile'])) {
+        if ( is_string($res) )
+            YII_DEBUG && Yii::trace('Got ' . strlen($res) . ' bytes', __CLASS__);
+        else
+            YII_DEBUG && Yii::trace('Got ' . var_export($res, true), __CLASS__);
+        
+        if ( isset($params['tofile']) ) {
             fclose($tofile);
         }
-        $this->error = curl_error($ch);
+        
+        // Saving last error
+        $this->_lastError = curl_error($ch);
+        
         curl_close($ch);
         
-        if($this->lastpageFile != null)
+        // Saving response content into lastpageFile
+        if ( $this->lastpageFile != null )
             file_put_contents($this->lastpageFile, $res);
         
         return $res;
@@ -123,11 +140,11 @@ class HttpClient extends CApplicationComponent
     }
 
     /**
-     * @deprecated
-     * @return type 
+     * Returns last request error
+     * @return string 
      */
-    public function get_last_error() {
-        return $this->error;
+    public function getLastError() {
+        return $this->_lastError;
     }
     
     /* Setters */
@@ -146,7 +163,7 @@ class HttpClient extends CApplicationComponent
         $this->setCookieFile($fileName, true);
     }
 
-        /**
+    /**
      * @deprecated
      * @param type $proxy 
      */
