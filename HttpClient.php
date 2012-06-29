@@ -33,6 +33,8 @@ class HttpClient extends CApplicationComponent
         'header' => false,
         'timeout' => 15,
         
+        'tofile' => null,
+        
         'attempts_max' => 1,
         'attempts_delay' => 10,
     );
@@ -45,9 +47,10 @@ class HttpClient extends CApplicationComponent
             $this->setRandomCookieFile();
     }
     
-    public function get($url)
+    public function get($url, $params = array())
     {
-        return $this->request(array('url' => $url));
+        $params['url'] = $url;
+        return $this->request($params);
     }
     
     public function request($params)
