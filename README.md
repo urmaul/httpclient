@@ -7,3 +7,4 @@ TODO
 ----
 
 * Rewrite it all
+* Rename $params

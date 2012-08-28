@@ -110,8 +110,54 @@ class HttpClient extends CApplicationComponent
         return $res;
     }
     
+    /**
+     * Creates multiple request
+     * @param array $requests requests parameters [key] => [params array]
+     * @param array $defaults default request paremeters
+     * @return array http request results array [key] => [result string]
+     * Requests array keys are used to differ results
+     */
     public function multiRequest($requests, $defaults = array())
     {
+        $defaults = array_merge($this->defaults, $defaults);
+        
+        $mh = curl_multi_init();
+        
+        $handles = array();
+        
+        foreach ($requests as $key => $request) {
+            $params = array_merge($defaults, $request);
+            
+            $ch = $this->createCurl($params);
+            
+            curl_multi_add_handle($mh, $ch);
+            
+            $handles[$key] = $ch;
+        }
+
+        $active = null;
+        
+        do {
+            $mrc = curl_multi_exec($mh, $active);
+        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+
+        while ($active && $mrc == CURLM_OK) {
+            if (curl_multi_select($mh) != -1) {
+                do {
+                    $mrc = curl_multi_exec($mh, $active);
+                } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+            }
+        }
+        
+        $results = array();
+        foreach ($handles as $key => $ch) {
+            $results[$key] = curl_multi_getcontent($ch);
+            curl_multi_remove_handle($mh, $ch);
+        }
+
+        curl_multi_close($mh);
+        
+        return $results;
     }
     
     protected function createCurl($params)
