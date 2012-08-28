@@ -57,15 +57,7 @@ class HttpClient extends CApplicationComponent
     {
         $params = array_merge($this->defaults, $params);
         
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,     $params['url']);
-        curl_setopt($ch, CURLOPT_HEADER,  $params['header']);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $params['timeout']);
-        curl_setopt($ch, CURLOPT_REFERER, $params['ref']);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_NOBODY, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        $ch = $this->createCurl($params);
         
         if( isset($params['tofile']) ) {
             $tofile = fopen($params['tofile'], 'wb');
@@ -79,15 +71,6 @@ class HttpClient extends CApplicationComponent
         if( $this->use_proxy )
             curl_setopt($ch, CURLOPT_PROXY, $this->proxy());
 
-        if( $params['post'] !== null ) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $params['post']);
-        }
-        
-        if( $this->cookieFile !== null ) {
-            curl_setopt ($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
-            curl_setopt ($ch, CURLOPT_COOKIEJAR,  $this->cookieFile);
-        }
         
         // Debug code
         /*echo
@@ -126,6 +109,36 @@ class HttpClient extends CApplicationComponent
         
         return $res;
     }
+    
+    public function multiRequest($requests, $defaults = array())
+    {
+    }
+    
+    protected function createCurl($params)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,     $params['url']);
+        curl_setopt($ch, CURLOPT_HEADER,  $params['header']);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $params['timeout']);
+        curl_setopt($ch, CURLOPT_REFERER, $params['ref']);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_NOBODY, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        
+        if( $params['post'] !== null ) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params['post']);
+        }
+        
+        if( $this->cookieFile !== null ) {
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
+            curl_setopt($ch, CURLOPT_COOKIEJAR,  $this->cookieFile);
+        }
+        
+        return $ch;
+    }
+    
 
     /**
      * @deprecated
