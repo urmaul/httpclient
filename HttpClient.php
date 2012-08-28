@@ -119,6 +119,9 @@ class HttpClient extends CApplicationComponent
      */
     public function multiRequest($requests, $defaults = array())
     {
+        if ( empty($requests) )
+            return array();
+        
         $defaults = array_merge($this->defaults, $defaults);
         
         $mh = curl_multi_init();
