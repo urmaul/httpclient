@@ -197,7 +197,7 @@ class HttpClient extends CApplicationComponent
         return $this->proxies[ ++$this->i_proxy % count($this->proxies) ];
     }
     
-    /* Getters */
+    # Getters #
     
     public function getCookieFile()
     {
@@ -212,7 +212,7 @@ class HttpClient extends CApplicationComponent
         return $this->_lastError;
     }
     
-    /* Setters */
+    # Setters #
 
     public function setCookieFile($fname, $clear = true)
     {
@@ -238,7 +238,7 @@ class HttpClient extends CApplicationComponent
         $this->proxies = explode("\n", $proxy);
     }
 
-    /* Actions */
+    # Actions #
     
     /**
      * Creates and clears cookie file 
