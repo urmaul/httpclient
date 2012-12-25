@@ -18,6 +18,10 @@ class HttpClient extends CApplicationComponent
     
     public $useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en)';
     
+    /**
+     * When true, HttpClient creates temporary file for cookies.
+     * @var boolean
+     */
     public $useRandomCookieFile = false;
     public $randomCookieFilePrefix = 'yiihc';
     
@@ -31,6 +35,7 @@ class HttpClient extends CApplicationComponent
         'ref'  => '',
         
         'header' => false,
+        'nobody' => false,
         'timeout' => 15,
         
         'tofile' => null,
@@ -47,12 +52,27 @@ class HttpClient extends CApplicationComponent
             $this->setRandomCookieFile();
     }
     
+    /**
+     * Runs http request.
+     * @param string $url request url.
+     * @param array $params request params.
+     * @return string|boolean returns responce in the usual case, true when
+     * result goes to file and false if request failed.
+     * @throws CException when "tofile" is defined and file is not writeable.
+     */
     public function get($url, $params = array())
     {
         $params['url'] = $url;
         return $this->request($params);
     }
     
+    /**
+     * Runs http request.
+     * @param array $params request params.
+     * @return string|boolean returns responce in the usual case, true when
+     * result goes to file and false if request failed.
+     * @throws CException when "tofile" is defined and file is not writeable.
+     */
     public function request($params)
     {
         $params = array_merge($this->defaults, $params);
@@ -166,13 +186,13 @@ class HttpClient extends CApplicationComponent
     protected function createCurl($params)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,     $params['url']);
-        curl_setopt($ch, CURLOPT_HEADER,  $params['header']);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $params['timeout']);
-        curl_setopt($ch, CURLOPT_REFERER, $params['ref']);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_NOBODY, 0);
+        curl_setopt($ch, CURLOPT_URL,            $params['url']);
+        curl_setopt($ch, CURLOPT_HEADER,         $params['header']);
+        curl_setopt($ch, CURLOPT_TIMEOUT,        $params['timeout']);
+        curl_setopt($ch, CURLOPT_REFERER,        $params['ref']);
+        curl_setopt($ch, CURLOPT_USERAGENT,      $this->useragent);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, !isset($params['tofile']));
+        curl_setopt($ch, CURLOPT_NOBODY,         $params['nobody']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         
         if( $params['post'] !== null ) {
