@@ -53,7 +53,7 @@ class HttpClient extends CApplicationComponent
     }
     
     /**
-     * Runs http request.
+     * Runs http GET request.
      * @param string $url request url.
      * @param array $params request params.
      * @return string|boolean returns responce in the usual case, true when
@@ -63,6 +63,22 @@ class HttpClient extends CApplicationComponent
     public function get($url, $params = array())
     {
         $params['url'] = $url;
+        return $this->request($params);
+    }
+    
+    /**
+     * Runs http POST request.
+     * @param string $url request url.
+     * @param array $post post data.
+     * @param array $params request params.
+     * @return string|boolean returns responce in the usual case, true when
+     * result goes to file and false if request failed.
+     * @throws CException when "tofile" is defined and file is not writeable.
+     */
+    public function post($url, $post = array(), $params = array())
+    {
+        $params['url'] = $url;
+        $params['post'] = $post;
         return $this->request($params);
     }
     
