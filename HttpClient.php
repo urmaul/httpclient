@@ -56,7 +56,7 @@ class HttpClient extends CApplicationComponent
      * Runs http GET request.
      * @param string $url request url.
      * @param array $params request params.
-     * @return string|boolean returns responce in the usual case, true when
+     * @return string|boolean returns response in the usual case, true when
      * result goes to file and false if request failed.
      * @throws CException when "tofile" is defined and file is not writeable.
      */
@@ -71,7 +71,7 @@ class HttpClient extends CApplicationComponent
      * @param string $url request url.
      * @param array $post post data.
      * @param array $params request params.
-     * @return string|boolean returns responce in the usual case, true when
+     * @return string|boolean returns response in the usual case, true when
      * result goes to file and false if request failed.
      * @throws CException when "tofile" is defined and file is not writeable.
      */
@@ -85,7 +85,7 @@ class HttpClient extends CApplicationComponent
     /**
      * Runs http request.
      * @param array $params request params.
-     * @return string|boolean returns responce in the usual case, true when
+     * @return string|boolean returns response in the usual case, true when
      * result goes to file and false if request failed.
      * @throws CException when "tofile" is defined and file is not writeable.
      */
