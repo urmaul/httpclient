@@ -132,6 +132,8 @@ class HttpClient extends CApplicationComponent
         
         if ( isset($params['tofile']) ) {
             fclose($tofile);
+            if ($res === FALSE)
+                unlink($params['tofile']);
         }
         
         // Saving last error
