@@ -53,6 +53,22 @@ class HttpClient extends CApplicationComponent
     }
     
     /**
+     * Runs http request to get responce headers.
+     * @param string $url request url.
+     * @param array $params request params.
+     * @return string|boolean returns response in the usual case, true when
+     * result goes to file and false if request failed.
+     * @throws CException when "tofile" is defined and file is not writeable.
+     */
+    public function head($url, $params = array())
+    {
+        $params['url'] = $url;
+        $params['header'] = true;
+        $params['nobody'] = true;
+        return $this->request($params);
+    }
+
+    /**
      * Runs http GET request.
      * @param string $url request url.
      * @param array $params request params.
