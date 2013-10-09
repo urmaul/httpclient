@@ -13,6 +13,15 @@ Add this to your "components" config:
 ),
 ```
 
+## How to use
+
+### Methods
+
+* **head($url, $params = array())** - performs http request to get responce headers.
+* **get($url, $params = array())** - performs http GET request.
+* **post($url, $post = array(), $params = array())** - performs http POST request.
+* **request($params)** - performs http request.
+
 ## TODO
 
 * Rewrite it all
