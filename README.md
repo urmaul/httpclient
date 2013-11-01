@@ -20,6 +20,7 @@ Add this to your "components" config:
 * **head($url, $params = array())** - performs http request to get responce headers.
 * **get($url, $params = array())** - performs http GET request.
 * **post($url, $post = array(), $params = array())** - performs http POST request.
+* **download($url, $dest, $post = array(), $params = array())** - downloads file.
 * **request($params)** - performs http request.
 
 ### Possible $params values

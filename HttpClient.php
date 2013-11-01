@@ -98,6 +98,23 @@ class HttpClient extends CApplicationComponent
         return $this->request($params);
     }
     
+    
+    /**
+     * Downloads file.
+     * @param string $url request url.
+     * @param string $dest file destination.
+     * @param array $params request params.
+     * @return boolean true when file is downloaded and false if downloading
+     * failed.
+     * @throws CException when $dest file is not writeable.
+     */
+    public function download($url, $dest, $params = array())
+    {
+        $params['url'] = $url;
+        $params['tofile'] = $dest;
+        return $this->request($params);
+    }
+    
     /**
      * Runs http request.
      * @param array $params request params.
