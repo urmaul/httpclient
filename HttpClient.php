@@ -159,7 +159,7 @@ class HttpClient extends CApplicationComponent
         );
         
         if ( is_string($res) )
-            YII_DEBUG && Yii::trace('Got ' . strlen($res) . ' bytes', __CLASS__);
+            YII_DEBUG && Yii::trace('Got ' . curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD) . ' bytes', __CLASS__);
         else
             YII_DEBUG && Yii::trace('Got ' . var_export($res, true), __CLASS__);
         
