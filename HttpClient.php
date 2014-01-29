@@ -3,15 +3,12 @@
 /**
  * @property string $cookieFile path to file that stores cookies 
  * 
- * @property-read string $lastError last request error
+ * @property-read string $lastError last request error.
+ * @property-read string $info information about the last transfer.
+ * @property-read string $httpCode last received HTTP code.
  */
 class HttpClient extends CApplicationComponent
 {
-    /**
-     * @var string last request error
-     */
-    private $_lastError;
-
     protected $use_proxy = false;
     protected $proxies;
     protected $i_proxy = -1;
@@ -43,6 +40,8 @@ class HttpClient extends CApplicationComponent
         'attempts_max' => 1,
         'attempts_delay' => 10,
     );
+    
+    protected $ch;
 
     function init()
     {
@@ -126,6 +125,11 @@ class HttpClient extends CApplicationComponent
     {
         $params = array_merge($this->defaults, $params);
         
+        if (isset($this->ch)) {
+            curl_close($this->ch);
+            $this->ch = null;
+        }
+        
         $ch = $this->createCurl($params);
         
         if( isset($params['tofile']) ) {
@@ -169,10 +173,7 @@ class HttpClient extends CApplicationComponent
                 unlink($params['tofile']);
         }
         
-        // Saving last error
-        $this->_lastError = curl_error($ch);
-        
-        curl_close($ch);
+        $this->ch = $ch;
         
         // Saving response content into lastpageFile
         if ( $this->lastpageFile != null )
@@ -279,8 +280,19 @@ class HttpClient extends CApplicationComponent
      * Returns last request error
      * @return string 
      */
-    public function getLastError() {
-        return $this->_lastError;
+    public function getLastError()
+    {
+        return isset($this->ch) ? curl_error($this->ch) : null;
+    }
+    
+    public function getInfo($opt = null)
+    {
+        return isset($this->ch) ? curl_getinfo($this->ch, $opt) : null;
+    }
+    
+    public function getHttpCode()
+    {
+        return $this->getInfo(CURLINFO_HTTP_CODE);
     }
     
     # Setters #
