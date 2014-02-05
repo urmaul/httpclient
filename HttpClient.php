@@ -241,7 +241,8 @@ class HttpClient extends CApplicationComponent
         curl_setopt($ch, CURLOPT_URL,            $params['url']);
         curl_setopt($ch, CURLOPT_HEADER,         $params['header']);
         curl_setopt($ch, CURLOPT_TIMEOUT,        $params['timeout']);
-        curl_setopt($ch, CURLOPT_REFERER,        $params['ref']);
+        if (!empty($params['ref']))
+                curl_setopt($ch, CURLOPT_REFERER, $params['ref']);
         curl_setopt($ch, CURLOPT_USERAGENT,      $this->useragent);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, !isset($params['tofile']));
         curl_setopt($ch, CURLOPT_NOBODY,         $params['nobody']);
