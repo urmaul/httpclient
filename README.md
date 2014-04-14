@@ -1,17 +1,6 @@
-# Yii Http Client
+# Php Http Client
 
-Http client for Yii Framework. It is a CApplicationComponent wrapper for curl.
-
-## How to attach
-
-Add this to your "components" config:
-
-```php
-'httpClient' => array(
-    'class' => 'ext.httpclient.HttpClient',
-    'useRandomCookieFile' => true,
-),
-```
+It is a wrapper for curl.
 
 ## How to use
 
