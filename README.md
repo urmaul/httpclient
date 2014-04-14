@@ -1,6 +1,8 @@
 # Php Http Client
 
-It is a wrapper for curl.
+It is a PHP wrapper for curl.
+
+[![Build Status](https://travis-ci.org/urmaul/httpclient.svg)](https://travis-ci.org/urmaul/httpclient)
 
 ## How to use
 
