@@ -9,10 +9,6 @@
  */
 class HttpClient
 {
-    protected $use_proxy = false;
-    protected $proxies;
-    protected $i_proxy = -1;
-    
     public $useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en)';
     
     /**
@@ -138,10 +134,6 @@ class HttpClient
             
             curl_setopt($ch, CURLOPT_FILE, $tofile);
         }
-
-        if( $this->use_proxy )
-            curl_setopt($ch, CURLOPT_PROXY, $this->proxy());
-
         
         // Debug code
         /*echo
@@ -254,15 +246,6 @@ class HttpClient
         return $ch;
     }
     
-
-    /**
-     * @deprecated
-     * @return type 
-     */
-    protected function proxy() {
-        return $this->proxies[ ++$this->i_proxy % count($this->proxies) ];
-    }
-    
     # Getters #
     
     public function getCookieFile()
@@ -303,16 +286,6 @@ class HttpClient
     {
         $fileName = tempnam(sys_get_temp_dir(), $this->randomCookieFilePrefix);
         $this->setCookieFile($fileName, true);
-    }
-
-    /**
-     * @deprecated
-     * @param type $proxy 
-     */
-    public function set_proxy( $proxy )
-    {
-        $this->use_proxy = 1;
-        $this->proxies = explode("\n", $proxy);
     }
 
     # Actions #
