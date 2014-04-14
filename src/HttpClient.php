@@ -25,6 +25,7 @@ class HttpClient
     protected $defaults = array(
         'url'  => '',
         'post' => null,
+        'headers' => null,
         'ref'  => '',
         
         'header' => false,
@@ -229,12 +230,17 @@ class HttpClient
         curl_setopt($ch, CURLOPT_NOBODY,         $params['nobody']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         
-        if (!empty($params['ref']))
+        if (!empty($params['ref'])) {
             curl_setopt($ch, CURLOPT_REFERER, $params['ref']);
+        }
         
-        if( $params['post'] !== null ) {
+        if($params['post'] !== null) {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params['post']);
+        }
+        
+        if($params['headers'] !== null) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER,     $params['headers']);
         }
         
         $cookieFile = $this->getCookieFile();

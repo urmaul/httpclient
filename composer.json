@@ -1,0 +1,24 @@
+{
+    "name": "urmaul/httpclient",
+    "type": "library",
+    "description": "It is a PHP wrapper for curl.",
+    "keywords": ["httpclient"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bogdan Kolbik"
+        }
+    ],
+    "require": {
+        "php": ">=5.2",
+        "lib-curl": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src/HttpClient.php"
+        ]
+    }
+}
