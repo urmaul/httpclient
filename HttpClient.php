@@ -7,7 +7,7 @@
  * @property-read string $info information about the last transfer.
  * @property-read string $httpCode last received HTTP code.
  */
-class HttpClient extends CApplicationComponent
+class HttpClient
 {
     protected $use_proxy = false;
     protected $proxies;
@@ -20,7 +20,7 @@ class HttpClient extends CApplicationComponent
      * @var boolean
      */
     public $useRandomCookieFile = false;
-    public $randomCookieFilePrefix = 'yiihc';
+    public $randomCookieFilePrefix = 'phphc';
     
     protected $_cookieFile = null;
     
@@ -45,8 +45,6 @@ class HttpClient extends CApplicationComponent
 
     function init()
     {
-        parent::init();
-        
         if ( $this->useRandomCookieFile )
             $this->setRandomCookieFile();
     }
@@ -150,8 +148,6 @@ class HttpClient extends CApplicationComponent
             '<b>' . $params['url'] . '</b>' .
             '<pre>' . var_export($params['post'], true) . '</pre>';*/
 
-        Yii::trace('Calling ' . $params['url'], __CLASS__);
-        
         do {
             // Do http request
             $res = curl_exec($ch);
@@ -161,11 +157,6 @@ class HttpClient extends CApplicationComponent
             --$params['attempts_max'] != 0 &&
             sleep($params['attempts_delay']) !== FALSE
         );
-        
-        if ( is_string($res) )
-            YII_DEBUG && Yii::trace('Got ' . curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD) . ' bytes', __CLASS__);
-        else
-            YII_DEBUG && Yii::trace('Got ' . var_export($res, true), __CLASS__);
         
         if ( isset($params['tofile']) ) {
             fclose($tofile);
@@ -254,9 +245,10 @@ class HttpClient extends CApplicationComponent
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params['post']);
         }
         
-        if( $this->cookieFile !== null ) {
-            curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
-            curl_setopt($ch, CURLOPT_COOKIEJAR,  $this->cookieFile);
+        $cookieFile = $this->getCookieFile();
+        if($cookieFile !== null) {
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
+            curl_setopt($ch, CURLOPT_COOKIEJAR,  $cookieFile);
         }
         
         return $ch;
