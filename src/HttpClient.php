@@ -46,6 +46,18 @@ class HttpClient
             $this->setRandomCookieFile();
     }
     
+    public static function from($params)
+    {
+		$client = new self();
+		
+        foreach ($params as $key => $val)
+			$client->$key = $val;
+		
+		$client->init();
+		
+		return $client;
+    }
+    
     /**
      * Runs http request to get responce headers.
      * @param string $url request url.
@@ -299,10 +311,11 @@ class HttpClient
     /**
      * Creates and clears cookie file 
      */
-    public function clearCookieFile ()
+    public function clearCookieFile()
     {
-        if ($this->cookieFile !== null)
-            file_put_contents($this->cookieFile, '');
+		$cookieFile = $this->getCookieFile();
+        if ($cookieFile !== null)
+            file_put_contents($cookieFile, '');
     }
 
 }
