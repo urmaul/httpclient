@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @property string $cookieFile path to file that stores cookies 
- * 
- * @property-read string $lastError last request error.
- * @property-read string $info information about the last transfer.
- * @property-read string $httpCode last received HTTP code.
- */
 class HttpClient
 {
     public $useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en)';
@@ -281,11 +274,21 @@ class HttpClient
         return isset($this->ch) ? curl_error($this->ch) : null;
     }
     
+    /**
+     * Returns information about the last transfer.
+     * @see curl_getinfo
+     * @param integer $opt
+     * @return mixed
+     */
     public function getInfo($opt = null)
     {
         return isset($this->ch) ? curl_getinfo($this->ch, $opt) : null;
     }
     
+    /**
+     * Last received HTTP code.
+     * @return integer
+     */
     public function getHttpCode()
     {
         return $this->getInfo(CURLINFO_HTTP_CODE);
