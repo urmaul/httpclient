@@ -22,4 +22,14 @@ class InfoTest extends PHPUnit_Framework_TestCase
 		$http->get($url);
 		$this->assertEquals($expected, $http->getHttpCode());
 	}
+	
+	/**
+	 * @dataProvider statuses
+	 */
+	public function testStatusCodeProperty($url, $expected)
+	{
+		$http = new HttpClient();
+		$http->get($url);
+		$this->assertEquals($expected, $http->httpCode);
+	}
 }

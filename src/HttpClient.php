@@ -1,5 +1,12 @@
 <?php
 
+/**
+* @property string $cookieFile path to file that stores cookies
+*
+* @property-read string $lastError last request error.
+* @property-read string $info information about the last transfer.
+* @property-read string $httpCode last received HTTP code.
+*/
 class HttpClient
 {
     public $useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en)';
@@ -50,6 +57,14 @@ class HttpClient
 		
 		return $client;
     }
+    
+    public function __get($name)
+	{
+		$getter='get'.$name;
+		if(method_exists($this,$getter))
+			return $this->$getter();
+		throw new Exception('Property "' . get_class($this) . '.' . $name . '" is not defined.');
+	}
     
     /**
      * Runs http request to get responce headers.
