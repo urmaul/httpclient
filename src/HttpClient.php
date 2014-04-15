@@ -46,7 +46,7 @@ class HttpClient
             $this->setRandomCookieFile();
     }
     
-    public static function from($params)
+    public static function from($params = array())
     {
 		$client = new self();
 		
@@ -241,6 +241,7 @@ class HttpClient
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, !isset($params['tofile']));
         curl_setopt($ch, CURLOPT_NOBODY,         $params['nobody']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_ENCODING,       '');
         
         if (!empty($params['ref'])) {
             curl_setopt($ch, CURLOPT_REFERER, $params['ref']);
