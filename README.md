@@ -13,6 +13,7 @@ It is a PHP wrapper for curl.
 * **post($url, $post = array(), $params = array())** - performs http POST request.
 * **download($url, $dest, $post = array(), $params = array())** - downloads file.
 * **request($params)** - performs http request.
+* **getInfo($opt = null)** - Returns information about the last transfer. [Details](http://www.php.net/manual/ru/function.curl-getinfo.php)
 
 ### Possible $params values
 
@@ -26,8 +27,9 @@ It is a PHP wrapper for curl.
 * **attempts_max** - *(integer, default = 1)* maximum number of attempts to perform HTTP request.
 * **attempts_delay** - *(integer, default = 10)* delay between attempts, in seconds
 
+### Readonly properties
 
-## TODO
-
-* Rewrite it all
-* Rename $params
+* **$lastError** - (string) last request error.
+* **$info** - (array) information about the last transfer.
+* **$httpCode** - (integer) last received HTTP code.
+* **$effectiveUrl** - (string) last effective url.
