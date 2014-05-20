@@ -1,12 +1,13 @@
 <?php
 
 /**
-* @property string $cookieFile path to file that stores cookies
-*
-* @property-read string $lastError last request error.
-* @property-read string $info information about the last transfer.
-* @property-read string $httpCode last received HTTP code.
-*/
+ * @property string $cookieFile path to file that stores cookies
+ *
+ * @property-read string $lastError last request error.
+ * @property-read array $info information about the last transfer.
+ * @property-read integer $httpCode last received HTTP code.
+ * @property-read string $effectiveUrl last effective url.
+ */
 class HttpClient
 {
     public $useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en)';
@@ -307,6 +308,15 @@ class HttpClient
     public function getHttpCode()
     {
         return $this->getInfo(CURLINFO_HTTP_CODE);
+    }
+    
+    /**
+     * Last effective url.
+     * @return string
+     */
+    public function getEffectiveUrl()
+    {
+        return $this->getInfo(CURLINFO_EFFECTIVE_URL);
     }
     
     # Setters #
