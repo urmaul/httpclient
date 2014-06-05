@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="Faker Test Suite">
+        <testsuite name="Httpclient Test Suite">
             <directory>./test/</directory>
         </testsuite>
     </testsuites>
