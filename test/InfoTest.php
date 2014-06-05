@@ -21,15 +21,25 @@ class InfoTest extends PHPUnit_Framework_TestCase
 		$http = new HttpClient();
 		$http->get($url);
 		$this->assertEquals($expected, $http->getHttpCode());
+		$this->assertEquals($expected, $http->httpCode);
+	}
+
+	public function effectiveUrls()
+	{
+		return array(
+			array('http://httpbin.org/status/418', 'http://httpbin.org/status/418'),
+			array('http://httpbin.org/redirect/6', 'http://httpbin.org/get'),
+		);
 	}
 	
 	/**
-	 * @dataProvider statuses
+	 * @dataProvider effectiveUrls
 	 */
-	public function testStatusCodeProperty($url, $expected)
+	public function testEffectiveUrl($url, $expected)
 	{
 		$http = new HttpClient();
 		$http->get($url);
-		$this->assertEquals($expected, $http->httpCode);
+		$this->assertEquals($expected, $http->getEffectiveUrl());
+		$this->assertEquals($expected, $http->effectiveUrl);
 	}
 }
