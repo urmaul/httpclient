@@ -25,4 +25,17 @@ class CookieTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals($expected, json_decode($actual, true));
 	}
+	
+	public function testTempFileIsRemoved()
+	{
+		$http = HttpClient::from(array('useRandomCookieFile' => true));
+		$file = $http->cookieFile . '';
+		
+		$actual = $http->get('http://httpbin.org/cookies/set?k1=v1&k2=v2');
+		
+		$this->assertTrue(file_exists($file));
+		unset($http);
+		clearstatcache(true, $file);
+		$this->assertFalse(file_exists($file), $file . ' must be already deleted');
+	}
 }

@@ -347,4 +347,12 @@ class HttpClient
             file_put_contents($cookieFile, '');
     }
 
+	public function __destruct()
+	{
+		unset($this->ch);
+		
+		$cookieFile = $this->getCookieFile();
+        if ($cookieFile !== null)
+			unlink($cookieFile);
+	}
 }
