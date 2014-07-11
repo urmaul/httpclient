@@ -7,6 +7,7 @@
  * @property-read array $info information about the last transfer.
  * @property-read integer $httpCode last received HTTP code.
  * @property-read string $effectiveUrl last effective url.
+ * @property-read array $cookies current cookies.
  */
 class HttpClient
 {
