@@ -33,3 +33,4 @@ It is a PHP wrapper for curl.
 * **$info** - (array) information about the last transfer.
 * **$httpCode** - (integer) last received HTTP code.
 * **$effectiveUrl** - (string) last effective url.
+* **$cookies** - (array) cookies array. **Warning,** after calling this property you will be not able to get another properties.

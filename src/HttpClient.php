@@ -40,7 +40,7 @@ class HttpClient
     );
     
     protected $ch;
-
+    
     function init()
     {
         if ( $this->useRandomCookieFile )
@@ -317,6 +317,30 @@ class HttpClient
     public function getEffectiveUrl()
     {
         return $this->getInfo(CURLINFO_EFFECTIVE_URL);
+    }
+    
+    /**
+     * Current cookies.
+     * Warning! This function has side effects - you can't call getInfo() of
+     * getLastError() after calling this function.
+     * @return array
+     */
+    public function getCookies()
+    {
+		if (!$this->getCookieFile())
+			return array();
+        
+        unset($this->ch);
+		
+        $text = file_get_contents($this->getCookieFile());
+        
+        $cookies = array();
+        foreach (explode("\n", $text) as $line) {
+            $parts = explode("\t", $line);
+            if (count($parts) === 7)
+                $cookies[$parts[5]] = $parts[6];
+        }
+        return $cookies;
     }
     
     # Setters #

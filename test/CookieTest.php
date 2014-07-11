@@ -38,4 +38,14 @@ class CookieTest extends PHPUnit_Framework_TestCase
 		clearstatcache(true, $file);
 		$this->assertFalse(file_exists($file), $file . ' must be already deleted');
 	}
+	
+	public function testGetCookies()
+	{
+		$http = HttpClient::from(array('useRandomCookieFile' => true));
+
+        $body = $http->get('http://httpbin.org/cookies/set?k1=v1&k2=v2', array('header' => true));
+        
+		$expected = array('k1' => 'v1', 'k2' => 'v2');
+		$this->assertEquals($expected, $http->cookies);
+	}
 }
