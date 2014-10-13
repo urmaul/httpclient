@@ -29,6 +29,7 @@ class HttpClient
         'post' => null,
         'headers' => null,
         'ref'  => '',
+        'cookies' => null,
         
         'header' => false,
         'nobody' => false,
@@ -50,23 +51,23 @@ class HttpClient
     
     public static function from($params = array())
     {
-		$client = new self();
-		
+        $client = new self();
+        
         foreach ($params as $key => $val)
-			$client->$key = $val;
-		
-		$client->init();
-		
-		return $client;
+            $client->$key = $val;
+        
+        $client->init();
+        
+        return $client;
     }
     
     public function __get($name)
-	{
-		$getter='get'.$name;
-		if(method_exists($this,$getter))
-			return $this->$getter();
-		throw new Exception('Property "' . get_class($this) . '.' . $name . '" is not defined.');
-	}
+    {
+        $getter='get'.$name;
+        if(method_exists($this,$getter))
+            return $this->$getter();
+        throw new Exception('Property "' . get_class($this) . '.' . $name . '" is not defined.');
+    }
     
     /**
      * Runs http request to get responce headers.
@@ -257,13 +258,24 @@ class HttpClient
             curl_setopt($ch, CURLOPT_REFERER, $params['ref']);
         }
         
-        if($params['post'] !== null) {
+        if ($params['post'] !== null) {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params['post']);
         }
         
-        if($params['headers'] !== null) {
+        if ($params['headers'] !== null) {
             curl_setopt($ch, CURLOPT_HTTPHEADER,     $params['headers']);
+        }
+        
+        if ($params['cookies']) {
+            $cookies = $params['cookies'];
+            if (is_array($cookies)) {
+                array_walk($cookies, function(&$val, $key){
+                    $val = $key . '=' . $val;
+                });
+                $cookies = implode('; ', $cookies);
+            }
+            curl_setopt($ch, CURLOPT_COOKIE, $cookies);
         }
         
         $cookieFile = $this->getCookieFile();
@@ -328,11 +340,11 @@ class HttpClient
      */
     public function getCookies()
     {
-		if (!$this->getCookieFile())
-			return array();
+        if (!$this->getCookieFile())
+            return array();
         
         unset($this->ch);
-		
+        
         $text = file_get_contents($this->getCookieFile());
         
         $cookies = array();
@@ -367,17 +379,17 @@ class HttpClient
      */
     public function clearCookieFile()
     {
-		$cookieFile = $this->getCookieFile();
+        $cookieFile = $this->getCookieFile();
         if ($cookieFile !== null)
             file_put_contents($cookieFile, '');
     }
 
-	public function __destruct()
-	{
-		unset($this->ch);
-		
-		$cookieFile = $this->getCookieFile();
+    public function __destruct()
+    {
+        unset($this->ch);
+        
+        $cookieFile = $this->getCookieFile();
         if ($cookieFile !== null)
-			unlink($cookieFile);
-	}
+            unlink($cookieFile);
+    }
 }

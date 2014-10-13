@@ -20,6 +20,7 @@ It is a PHP wrapper for curl.
 * **url** - *(string)* request url.
 * **post** - *(string|array)* request POST data.
 * **ref** - *(string)* "Referer" request header content.
+* **cookies** - *(string|array)* cookies to send.
 * **header** - *(boolean, default = false)* whether to include response header into response.
 * **nobody** - *(boolean, default = false)* whether to NOT include response body into response.
 * **timeout** - *(integer, default = 15)* request timeout.
