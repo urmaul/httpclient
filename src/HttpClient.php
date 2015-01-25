@@ -243,35 +243,38 @@ class HttpClient
     
     protected function createCurl($params)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,            $params['url']);
-        curl_setopt($ch, CURLOPT_HEADER,         $params['header']);
-        curl_setopt($ch, CURLOPT_TIMEOUT,        $params['timeout']);
-        curl_setopt($ch, CURLOPT_USERAGENT,      $this->useragent);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, !isset($params['tofile']));
-        curl_setopt($ch, CURLOPT_NOBODY,         $params['nobody']);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_ENCODING,       '');
+        $options =  array(
+            CURLOPT_URL => $params['url'],
+            CURLOPT_HEADER => $params['header'],
+            CURLOPT_TIMEOUT => $params['timeout'],
+            CURLOPT_USERAGENT => $this->useragent,
+            CURLOPT_RETURNTRANSFER => !isset($params['tofile']),
+            CURLOPT_NOBODY => $params['nobody'],
+            CURLOPT_FOLLOWLOCATION => 1,
+            CURLOPT_ENCODING => '',
+        );
         
         if (!empty($params['ref'])) {
-            curl_setopt($ch, CURLOPT_REFERER, $params['ref']);
+            $options[CURLOPT_REFERER] = $params['ref'];
         }
         
         if($params['post'] !== null) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $params['post']);
+            $options[CURLOPT_POST] = 1;
+            $options[CURLOPT_POSTFIELDS] = $params['post'];
         }
         
         if($params['headers'] !== null) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER,     $params['headers']);
+            $options[CURLOPT_HTTPHEADER] = $params['headers'];
         }
         
         $cookieFile = $this->getCookieFile();
         if($cookieFile !== null) {
-            curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
-            curl_setopt($ch, CURLOPT_COOKIEJAR,  $cookieFile);
+            $options[CURLOPT_COOKIEFILE] = $cookieFile;
+            $options[CURLOPT_COOKIEJAR] = $cookieFile;
         }
-        
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $options);
         return $ch;
     }
     
