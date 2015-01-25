@@ -38,6 +38,8 @@ class HttpClient
         
         'attempts_max' => 1,
         'attempts_delay' => 10,
+
+        'curl' => array(),
     );
     
     protected $ch;
@@ -140,7 +142,7 @@ class HttpClient
      */
     public function request($params)
     {
-        $params = array_merge($this->defaults, $params);
+        $params += $this->defaults;
         
         if (isset($this->ch)) {
             curl_close($this->ch);
@@ -158,11 +160,6 @@ class HttpClient
             curl_setopt($ch, CURLOPT_FILE, $tofile);
         }
         
-        // Debug code
-        /*echo
-            '<b>' . $params['url'] . '</b>' .
-            '<pre>' . var_export($params['post'], true) . '</pre>';*/
-
         do {
             // Do http request
             $res = curl_exec($ch);
@@ -200,16 +197,14 @@ class HttpClient
         if ( empty($requests) )
             return array();
         
-        $defaults = array_merge($this->defaults, $defaults);
+        $defaults += $this->defaults;
         
         $mh = curl_multi_init();
         
         $handles = array();
         
         foreach ($requests as $key => $request) {
-            $params = array_merge($defaults, $request);
-            
-            $ch = $this->createCurl($params);
+            $ch = $this->createCurl($request + $defaults);
             
             curl_multi_add_handle($mh, $ch);
             
@@ -243,7 +238,7 @@ class HttpClient
     
     protected function createCurl($params)
     {
-        $options =  array(
+        $options = array(
             CURLOPT_URL => $params['url'],
             CURLOPT_HEADER => $params['header'],
             CURLOPT_TIMEOUT => $params['timeout'],
@@ -258,23 +253,23 @@ class HttpClient
             $options[CURLOPT_REFERER] = $params['ref'];
         }
         
-        if($params['post'] !== null) {
+        if ($params['post'] !== null) {
             $options[CURLOPT_POST] = 1;
             $options[CURLOPT_POSTFIELDS] = $params['post'];
         }
         
-        if($params['headers'] !== null) {
+        if ($params['headers'] !== null) {
             $options[CURLOPT_HTTPHEADER] = $params['headers'];
         }
         
         $cookieFile = $this->getCookieFile();
-        if($cookieFile !== null) {
+        if ($cookieFile !== null) {
             $options[CURLOPT_COOKIEFILE] = $cookieFile;
             $options[CURLOPT_COOKIEJAR] = $cookieFile;
         }
 
         $ch = curl_init();
-        curl_setopt_array($ch, $options);
+        curl_setopt_array($ch, $params['curl'] + $options);
         return $ch;
     }
     

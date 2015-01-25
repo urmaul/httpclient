@@ -28,17 +28,18 @@ class InfoTest extends PHPUnit_Framework_TestCase
 	{
 		return array(
 			array('http://httpbin.org/status/418', 'http://httpbin.org/status/418'),
-			array('http://httpbin.org/redirect/6', 'http://httpbin.org/get'),
+			array('http://httpbin.org/redirect/1', 'http://httpbin.org/get'),
+			array('http://httpbin.org/redirect/1', 'http://httpbin.org/redirect/1', array('curl' => array(CURLOPT_FOLLOWLOCATION => 0))),
 		);
 	}
 	
 	/**
 	 * @dataProvider effectiveUrls
 	 */
-	public function testEffectiveUrl($url, $expected)
+	public function testEffectiveUrl($url, $expected, $params = array())
 	{
 		$http = new HttpClient();
-		$http->get($url);
+		$http->get($url, $params);
 		$this->assertEquals($expected, $http->getEffectiveUrl());
 		$this->assertEquals($expected, $http->effectiveUrl);
 	}
