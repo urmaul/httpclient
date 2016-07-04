@@ -2,9 +2,23 @@
 
 It is a PHP wrapper for curl.
 
+The main idea was just to make HTTP requests with one-liners. And cookie support out-of-the box.
+
+For something more complex you probably want Guzzle.
+
 [![Build Status](https://travis-ci.org/urmaul/httpclient.svg)](https://travis-ci.org/urmaul/httpclient)
 
 ## How to use
+
+Like that.
+
+~~~php
+HttpClient::from(['useRandomCookieFile' => true])->get('http://httpbin.org/get');
+
+HttpClient::from()->post('http://httpbin.org/post', ['foo' => 'bar']);
+
+HttpClient::from()->download('http://httpbin.org/image/jpeg', 'my-new-image-file.jpeg');
+~~~
 
 ### Methods
 
