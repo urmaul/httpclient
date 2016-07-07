@@ -375,7 +375,7 @@ class HttpClient
 		unset($this->ch);
 		
 		$cookieFile = $this->getCookieFile();
-        if ($cookieFile !== null)
-			unlink($cookieFile);
+		if ($cookieFile !== null)
+			@unlink($cookieFile);
 	}
 }
